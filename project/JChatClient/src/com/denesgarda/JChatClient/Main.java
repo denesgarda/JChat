@@ -5,12 +5,14 @@ import java.net.Socket;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Enter server address: ");
-        String[] address = in.readLine().split(":");
-        Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
+        Login login = new Login();
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        //System.out.print("Enter server address: ");
+        //String[] address = in.readLine().split(":");
+        //Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
+
+        /*BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         bufferedWriter.write("01100011 01101111 01101110 01101110 01100101 01100011 01110100");
         bufferedWriter.newLine();
         bufferedWriter.flush();
@@ -32,12 +34,18 @@ public class Main {
                 Thread thread = new Thread(server);
                 thread.start();
             }
+            else if(response2.equals("2")) {
+                System.out.println("Illegal name");
+            }
             else {
                 System.out.println("Unknown response code");
             }
         }
+        else if(response1.equals("1")) {
+            System.out.println("Connection refused: Connection throttle");
+        }
         else {
             System.out.println("Unknown response code");
-        }
+        }*/
     }
 }
