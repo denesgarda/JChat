@@ -1,8 +1,6 @@
 package com.denesgarda.JChatServer;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class Client implements Runnable {
@@ -15,13 +13,19 @@ public class Client implements Runnable {
     @Override
     public void run() {
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             while(!socket.isClosed()) {
-                String incoming = in.readLine();
-                if(incoming != null) {
-                    for(Client client : Main.clients) {
-                        out.write(incoming);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String incoming = bufferedReader.readLine();
+                for(Client client : Main.clients) {
+                    if(client.socket.isClosed()) {
+                        Main.clients.remove(client);
+                    }
+                    else {
+                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
+                        bufferedWriter.write(incoming);
+                        bufferedWriter.newLine();
+                        System.out.println(incoming);
+                        bufferedWriter.flush();
                     }
                 }
             }
