@@ -32,9 +32,15 @@ public class Main {
                 Thread thread = new Thread(server);
                 thread.start();
             }
+            else if(response2.equals("2")) {
+                System.out.println("Illegal name");
+            }
             else {
                 System.out.println("Unknown response code");
             }
+        }
+        else if(response1.equals("1")) {
+            System.out.println("Connection refused: Connection throttle");
         }
         else {
             System.out.println("Unknown response code");
