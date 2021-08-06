@@ -42,7 +42,7 @@ public class Client implements Runnable {
                         }
                     }
                     else {
-                        if(incoming.equalsIgnoreCase("INFO") || incoming.equalsIgnoreCase("WARN") || incoming.equalsIgnoreCase("ERROR") || incoming.equalsIgnoreCase("NOTE") || incoming.equalsIgnoreCase("SERVER") || incoming.isBlank()) {
+                        if(incoming.equalsIgnoreCase("INFO") || incoming.equalsIgnoreCase("WARN") || incoming.equalsIgnoreCase("ERROR") || incoming.equalsIgnoreCase("NOTE") || incoming.equalsIgnoreCase("SERVER") || incoming.isBlank() || incoming.contains(" ")) {
                             Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to use an illegal nickname");
                             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                             bufferedWriter.write("2");
