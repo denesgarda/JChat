@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Window extends JFrame {
     private JTextField textField1;
@@ -51,6 +52,10 @@ public class Window extends JFrame {
                                 out.newLine();
                                 out.flush();
                             }
+                        }
+                        catch(SocketException se) {
+                            JOptionPane.showMessageDialog(null, "An Error Occurred! Likely cause: Server crashed");
+                            System.exit(0);
                         }
                         catch(Exception ex) {
                             ex.printStackTrace();

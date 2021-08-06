@@ -23,6 +23,10 @@ public class Server implements Runnable {
                         JOptionPane.showMessageDialog(null, "You have been kicked from the server");
                         System.exit(0);
                     }
+                    if(incoming.equals("Server closed")) {
+                        JOptionPane.showMessageDialog(null, "Server closed");
+                        System.exit(0);
+                    }
                 }
             }
         }

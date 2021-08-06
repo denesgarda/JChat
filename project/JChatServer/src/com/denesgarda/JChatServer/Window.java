@@ -52,6 +52,18 @@ public class Window extends JFrame {
                             System.out.println(("List of people online: " + Arrays.toString(names.toArray())));
                         }
                         else if(input.equalsIgnoreCase("/stop")) {
+                            for(Client client : Main.connected) {
+                                try {
+                                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
+                                    bufferedWriter.write("Server closed");
+                                    bufferedWriter.newLine();
+                                    bufferedWriter.flush();
+                                    Main.logger.log("INFO", "Stopping server...");
+                                }
+                                catch(Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
                             System.exit(0);
                         }
                         else if(input.split(" ")[0].equalsIgnoreCase("/kick")) {
