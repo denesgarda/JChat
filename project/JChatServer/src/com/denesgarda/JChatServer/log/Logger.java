@@ -11,9 +11,12 @@ public class Logger {
         this.printStreams = printStreams;
     }
 
-    public void log(String level, String string) {
+    public String log(String level, String string) {
+        String result = null;
         for(PrintStream printStream : printStreams) {
-            printStream.println(Calendar.getInstance().getTime() + " [" + level + "]: " + string);
+            result = Calendar.getInstance().getTime() + " [" + level + "]: " + string;
+            printStream.println(result);
         }
+        return result;
     }
 }

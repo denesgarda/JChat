@@ -1,0 +1,12 @@
+Fri Aug 06 21:39:27 CEST 2021 [INFO]: Starting server
+Fri Aug 06 21:39:27 CEST 2021 [INFO]: Searching for config files
+Fri Aug 06 21:39:27 CEST 2021 [INFO]: Config files found
+Fri Aug 06 21:39:27 CEST 2021 [INFO]: Opening socket
+Fri Aug 06 21:39:27 CEST 2021 [INFO]: Server started on port 6577
+Fri Aug 06 21:39:34 CEST 2021 [INFO]: 127.0.0.1 requested to connect; querying nickname
+Fri Aug 06 21:39:34 CEST 2021 [INFO]: 127.0.0.1 joined with the username Denes
+Fri Aug 06 21:39:34 CEST 2021 [INFO]: Denes joined
+Fri Aug 06 21:39:42 CEST 2021 [Denes]: Hi
+Fri Aug 06 21:39:44 CEST 2021 [INFO]: Denes executed /list
+Fri Aug 06 21:39:50 CEST 2021 [INFO]: Kicked Denes
+Fri Aug 06 21:39:57 CEST 2021 [INFO]: Denes left

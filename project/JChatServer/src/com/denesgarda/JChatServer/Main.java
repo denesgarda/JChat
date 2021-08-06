@@ -20,6 +20,8 @@ public class Main {
     public static LinkedList<Client> connected = new LinkedList<>();
 
     public static void main(String[] args) throws Exception {
+        Window window = new Window();
+
         File logDir = new File("logs");
         if(!logDir.exists()) {
             boolean successful = logDir.mkdirs();
