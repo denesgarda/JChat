@@ -5,11 +5,9 @@ import java.net.Socket;
 
 public class Server implements Runnable {
     private Socket socket;
-    private String username;
 
-    public Server(Socket socket, String username) {
+    public Server(Socket socket) {
         this.socket = socket;
-        this.username = username;
     }
 
     @Override
@@ -24,7 +22,7 @@ public class Server implements Runnable {
                 }
                 if(sysIn.ready()) {
                     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    String outgoing = "[" + username + "]: " + sysIn.readLine();
+                    String outgoing = sysIn.readLine();
                     out.write(outgoing);
                     out.newLine();
                     out.flush();
