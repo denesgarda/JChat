@@ -103,7 +103,7 @@ public class Client implements Runnable {
                         else if(incoming.equalsIgnoreCase("/help")) {
                             Main.logger.log("INFO", username + " executed /help");
                             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                            bufferedWriter.write("HELP MENU<nl>==================<nl>/list - List the people online<nl>/quit - Quit the application<nl>/exit - Quit the application");
+                            bufferedWriter.write("HELP MENU<nl>==================<nl>/list - List the people online<nl>/leave - Leave the server<nl>/quit - Quit the application<nl>/exit - Quit the application");
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
                         }

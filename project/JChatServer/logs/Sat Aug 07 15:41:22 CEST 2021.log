@@ -1,0 +1,22 @@
+Sat Aug 07 15:41:22 CEST 2021 [INFO]: Starting server
+Sat Aug 07 15:41:22 CEST 2021 [INFO]: Searching for config files
+Sat Aug 07 15:41:22 CEST 2021 [INFO]: Config files found
+Sat Aug 07 15:41:22 CEST 2021 [INFO]: Opening socket
+Sat Aug 07 15:41:22 CEST 2021 [INFO]: Server started on port 6577
+Sat Aug 07 15:41:30 CEST 2021 [INFO]: 127.0.0.1 requested to connect; querying nickname
+Sat Aug 07 15:41:30 CEST 2021 [INFO]: 127.0.0.1 joined with the username user1
+Sat Aug 07 15:41:30 CEST 2021 [INFO]: user1 joined
+Sat Aug 07 15:41:41 CEST 2021 [user1]: Hello
+Sat Aug 07 15:41:43 CEST 2021 [user1]: yaya
+Sat Aug 07 15:41:46 CEST 2021 [INFO]: user1 left
+Sat Aug 07 15:41:54 CEST 2021 [INFO]: 127.0.0.1 requested to connect; querying nickname
+Sat Aug 07 15:41:54 CEST 2021 [INFO]: 127.0.0.1 joined with the username user2
+Sat Aug 07 15:41:54 CEST 2021 [INFO]: user2 joined
+Sat Aug 07 15:42:31 CEST 2021 [INFO]: user2 executed /help
+Sat Aug 07 15:42:45 CEST 2021 [INFO]: user2 executed /list
+Sat Aug 07 15:42:49 CEST 2021 [INFO]: user2 left
+Sat Aug 07 15:42:58 CEST 2021 [SERVER]: interesting
+Sat Aug 07 15:43:00 CEST 2021 [INFO]: Executed /list
+Sat Aug 07 15:43:07 CEST 2021 [SERVER]: /quit
+Sat Aug 07 15:43:09 CEST 2021 [SERVER]: /exit
+Sat Aug 07 15:43:27 CEST 2021 [INFO]: Stopping server...
