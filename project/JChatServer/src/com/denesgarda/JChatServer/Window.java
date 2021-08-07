@@ -44,9 +44,7 @@ public class Window extends JFrame {
                             String[] split = input.substring(1).split(" ");
                             String command = split[0];
                             String[] args = Arrays.copyOf(split, split.length - 1);
-                            for(int i = 0; i < split.length - 1; i++) {
-                                args[i] = split[i + 1];
-                            }
+                            System.arraycopy(split, 1, args, 0, split.length - 1);
                             command(command, args);
                         }
                         else {
