@@ -17,14 +17,22 @@ public class Login extends JFrame {
     private JTextField textField1;
     private JButton connectButton;
     private JTextField nicknameTextField;
+    private JButton cancelButton;
 
     public Login() {
         super("JChatClient Login");
         this.setSize(270, 128);
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(panel1);
         this.setVisible(true);
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -69,8 +77,8 @@ public class Login extends JFrame {
                 }
                 else if(response2.equals("1")) {
                     this.setVisible(false);
-                    new Window(socket);
-                    Server server = new Server(socket);
+                    Window window = new Window(socket);
+                    Server server = new Server(socket, window);
                     Thread thread = new Thread(server);
                     thread.start();
                 }

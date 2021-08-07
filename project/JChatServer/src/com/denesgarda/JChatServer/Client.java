@@ -89,23 +89,14 @@ public class Client implements Runnable {
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
                         }
-                        else if(incoming.equalsIgnoreCase("/list")) {
-                            Main.logger.log("INFO", username + " executed /list");
-                            LinkedList<String> names = new LinkedList<>();
-                            for(Client client : Main.connected) {
-                                names.add(client.username);
+                        else if(incoming.charAt(0) == '/') {
+                            String[] split = incoming.substring(1).split(" ");
+                            String command = split[0];
+                            String[] args = Arrays.copyOf(split, split.length - 1);
+                            for(int i = 0; i < split.length - 1; i++) {
+                                args[i] = split[i + 1];
                             }
-                            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                            bufferedWriter.write("List of people online: " + Arrays.toString(names.toArray()));
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
-                        }
-                        else if(incoming.equalsIgnoreCase("/help")) {
-                            Main.logger.log("INFO", username + " executed /help");
-                            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-                            bufferedWriter.write("HELP MENU<nl>==================<nl>/list - List the people online<nl>/leave - Leave the server<nl>/quit - Quit the application<nl>/exit - Quit the application");
-                            bufferedWriter.newLine();
-                            bufferedWriter.flush();
+                            command(command, args);
                         }
                         else {
                             String message = Main.logger.log(username, incoming);
@@ -128,6 +119,7 @@ public class Client implements Runnable {
         catch(NullPointerException e) {
             leave(this);
         }
+        catch(SocketException ignored) {}
         catch(Exception e) {
             e.printStackTrace();
         }
@@ -146,6 +138,40 @@ public class Client implements Runnable {
             catch(Exception ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    public void send(String content) throws IOException {
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+        bufferedWriter.write(content);
+        bufferedWriter.newLine();
+        bufferedWriter.flush();
+    }
+
+    private void command(String command, String[] args) throws IOException {
+        Main.logger.log("INFO", username + " executed /"  + command + " with the arguments " + Arrays.toString(args));
+        if(command.equalsIgnoreCase("help")) {
+            if(args.length == 0) {
+                this.send("HELP MENU<nl>==================<nl>/list - List the people online<nl>/leave - Leave the server<nl>/quit - Quit the application<nl>/exit - Quit the application");
+            }
+            else {
+                this.send("Invalid arguments");
+            }
+        }
+        else if(command.equalsIgnoreCase("list")) {
+            if(args.length == 0) {
+                LinkedList<String> names = new LinkedList<>();
+                for(Client client : Main.connected) {
+                    names.add(client.username);
+                }
+                this.send("List of people online: " + Arrays.toString(names.toArray()));
+            }
+            else {
+                this.send("Invalid arguments");
+            }
+        }
+        else {
+            this.send("Unknown command; Do \"/help\" for help");
         }
     }
 }

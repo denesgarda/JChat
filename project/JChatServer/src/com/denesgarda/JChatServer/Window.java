@@ -1,11 +1,14 @@
 package com.denesgarda.JChatServer;
 
+import com.denesgarda.Prop4j.data.PropertiesFile;
+
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -23,7 +26,9 @@ public class Window extends JFrame {
         DefaultCaret caret = (DefaultCaret) textArea1.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         TextAreaOutputStream out = new TextAreaOutputStream(textArea1, "");
-        System.setOut(new PrintStream(out));
+        PrintStream ps = new PrintStream(out);
+        System.setOut(ps);
+        System.setErr(ps);
         this.setSize(1024, 512);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,53 +40,14 @@ public class Window extends JFrame {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if(!textField1.getText().isBlank()) {
                         String input = textField1.getText();
-                        if(input.equalsIgnoreCase("/help")) {
-                            System.out.println("""
-                                        HELP MENU
-                                        =====================
-                                        /list - List the people online
-                                        /stop - Stop the server
-                                        /kick <person> - Kick someone""");
-                        }
-                        else if(input.equalsIgnoreCase("/list")) {
-                            Main.logger.log("INFO", "Executed /list");
-                            LinkedList<String> names = new LinkedList<>();
-                            for(Client client : Main.connected) {
-                                names.add(client.username);
+                        if(input.charAt(0) == '/') {
+                            String[] split = input.substring(1).split(" ");
+                            String command = split[0];
+                            String[] args = Arrays.copyOf(split, split.length - 1);
+                            for(int i = 0; i < split.length - 1; i++) {
+                                args[i] = split[i + 1];
                             }
-                            System.out.println(("List of people online: " + Arrays.toString(names.toArray())));
-                        }
-                        else if(input.equalsIgnoreCase("/stop")) {
-                            Main.logger.log("INFO", "Stopping server...");
-                            for(Client client : Main.connected) {
-                                try {
-                                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
-                                    bufferedWriter.write("Server closed");
-                                    bufferedWriter.newLine();
-                                    bufferedWriter.flush();
-                                }
-                                catch(Exception ex) {
-                                    ex.printStackTrace();
-                                }
-                            }
-                            System.exit(0);
-                        }
-                        else if(input.split(" ")[0].equalsIgnoreCase("/kick")) {
-                            String username = input.split(" ")[1];
-                            for(Client client : Main.connected) {
-                                if(client.username.equals(username)) {
-                                    try {
-                                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
-                                        bufferedWriter.write("You have been kicked from the server");
-                                        bufferedWriter.newLine();
-                                        bufferedWriter.flush();
-                                        Main.logger.log("INFO", "Kicked " + username);
-                                    }
-                                    catch(Exception ex) {
-                                        ex.printStackTrace();
-                                    }
-                                }
-                            }
+                            command(command, args);
                         }
                         else {
                             String message = Main.logger.log("SERVER", input);
@@ -102,5 +68,89 @@ public class Window extends JFrame {
                 }
             }
         });
+    }
+
+    private void command(String command, String[] args) {
+        Main.logger.log("INFO", "Executed /"  + command + " with the arguments " + Arrays.toString(args));
+        if(command.equalsIgnoreCase("help")) {
+            if(args.length == 0) {
+                System.out.println("""
+                    HELP MENU
+                    =====================
+                    /list - List the people online
+                    /stop - Stop the server
+                    /kick <person> - Kick someone""");
+            }
+            else {
+                System.out.println("Invalid arguments");
+            }
+        }
+        else if(command.equalsIgnoreCase("list")) {
+            if(args.length == 0) {
+                LinkedList<String> names = new LinkedList<>();
+                for(Client client : Main.connected) {
+                    names.add(client.username);
+                }
+                System.out.println("List of people online: " + Arrays.toString(names.toArray()));
+            }
+            else {
+                System.out.println("Invalid arguments");
+            }
+        }
+        else if(command.equalsIgnoreCase("stop")) {
+            if(args.length == 0) {
+                Main.logger.log("INFO", "Stopping server...");
+                for(Client client : Main.connected) {
+                    try {
+                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
+                        bufferedWriter.write("Server closed");
+                        bufferedWriter.newLine();
+                        bufferedWriter.flush();
+                    }
+                    catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                System.exit(0);
+            }
+            else {
+                System.out.println("Invalid arguments");
+            }
+        }
+        else if(command.equalsIgnoreCase("kick")) {
+            if(args.length == 1) {
+                String username = args[0];
+                for(Client client : Main.connected) {
+                    if(client.username.equals(username)) {
+                        try {
+                            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
+                            bufferedWriter.write("You have been kicked from the server");
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                            client.socket.close();
+                            Main.connected.remove(client);
+                            String message = Main.logger.log("INFO", username + " has been kicked from the server");
+                            for(Client newClient : Main.connected) {
+                                BufferedWriter newBufferedWriter = new BufferedWriter(new OutputStreamWriter(newClient.socket.getOutputStream()));
+                                newBufferedWriter.write(message);
+                                newBufferedWriter.newLine();
+                                newBufferedWriter.flush();
+                            }
+                            return;
+                        }
+                        catch(Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+                System.out.println("Could not find a user with the username " + username);
+            }
+            else {
+                System.out.println("Invalid arguments");
+            }
+        }
+        else {
+            System.out.println(("Unknown command; Do \"/help\" for help"));
+        }
     }
 }
