@@ -52,13 +52,13 @@ public class Window extends JFrame {
                             System.out.println(("List of people online: " + Arrays.toString(names.toArray())));
                         }
                         else if(input.equalsIgnoreCase("/stop")) {
+                            Main.logger.log("INFO", "Stopping server...");
                             for(Client client : Main.connected) {
                                 try {
                                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
                                     bufferedWriter.write("Server closed");
                                     bufferedWriter.newLine();
                                     bufferedWriter.flush();
-                                    Main.logger.log("INFO", "Stopping server...");
                                 }
                                 catch(Exception ex) {
                                     ex.printStackTrace();
