@@ -6,9 +6,11 @@ import java.net.Socket;
 
 public class Server implements Runnable {
     private Socket socket;
+    private JFrame frame;
 
-    public Server(Socket socket) {
+    public Server(Socket socket, JFrame frame) {
         this.socket = socket;
+        this.frame = frame;
     }
 
     @Override
@@ -26,7 +28,8 @@ public class Server implements Runnable {
                     }
                     if(incoming.equals("Server closed")) {
                         JOptionPane.showMessageDialog(null, "Server closed");
-                        System.exit(0);
+                        frame.setVisible(false);
+                        new Login();
                     }
                 }
             }
