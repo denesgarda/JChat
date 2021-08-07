@@ -18,6 +18,7 @@ public class Server implements Runnable {
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 if(in.ready()) {
                     String incoming = in.readLine();
+                    incoming = incoming.replace("<nl>", "\n");
                     System.out.println(incoming);
                     if(incoming.equals("You have been kicked from the server")) {
                         JOptionPane.showMessageDialog(null, "You have been kicked from the server");

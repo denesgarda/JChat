@@ -28,6 +28,7 @@ public class Window extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(panel);
         this.setVisible(true);
+        JFrame frame = this;
         textField1.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -35,16 +36,10 @@ public class Window extends JFrame {
                     if(!textField1.getText().isBlank()) {
                         try {
                             String input = textField1.getText();
-                            if(input.equalsIgnoreCase("/help")) {
-                                System.out.println("""
-                                        HELP MENU
-                                        =====================
-                                        /list - List the people online
-                                        /exit - Exit
-                                        /quit - Exit""");
-                            }
-                            else if(input.equalsIgnoreCase("/exit") || input.equalsIgnoreCase("/quit")) {
+                            if(input.equalsIgnoreCase("/exit") || input.equalsIgnoreCase("/quit")) {
                                 System.exit(0);
+                            }
+                            else if(input.equalsIgnoreCase("/leave")) {
                             }
                             else{
                                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));

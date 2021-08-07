@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 public class Login extends JFrame {
     private JPanel panel1;
@@ -64,7 +65,7 @@ public class Login extends JFrame {
                 bufferedWriter.flush();
                 String response2 = bufferedReader.readLine();
                 if(response2.equals("0")) {
-                    System.out.println("Username taken");
+                    JOptionPane.showMessageDialog(null, "Username is taken");
                 }
                 else if(response2.equals("1")) {
                     this.setVisible(false);
@@ -74,21 +75,28 @@ public class Login extends JFrame {
                     thread.start();
                 }
                 else if(response2.equals("2")) {
-                    System.out.println("Illegal name");
+                    JOptionPane.showMessageDialog(null, "User name is not allowed");
                 }
                 else {
-                    System.out.println("Unknown response code");
+                    JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
                 }
             }
             else if(response1.equals("1")) {
-                System.out.println("Connection refused: Connection throttle");
+                JOptionPane.showMessageDialog(null, "Connection refused: Connection throttle");
             }
             else {
-                System.out.println("Unknown response code");
+                JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
             }
         }
+        catch(SocketException e) {
+            JOptionPane.showMessageDialog(null, "Socket error: Either you are not connected to the internet, or the server is not running.");
+        }
+        catch(ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Unknown format; please use the format <ip>:<port>\nex. 11.222.333.444:9000");
+        }
         catch(Exception e) {
-
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred");
         }
     }
 }

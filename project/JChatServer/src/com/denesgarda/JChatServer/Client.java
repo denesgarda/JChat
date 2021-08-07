@@ -54,6 +54,7 @@ public class Client implements Runnable {
                         else {
                             for (Client client : Main.connected) {
                                 if (client.username.equals(incoming)) {
+                                    Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to use an taken nickname");
                                     BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                                     bufferedWriter.write("0");
                                     bufferedWriter.newLine();
@@ -81,7 +82,14 @@ public class Client implements Runnable {
                 }
                 else {
                     if(incoming != null) {
-                        if(incoming.equalsIgnoreCase("/list")) {
+                        if(incoming.contains("<nl>")) {
+                            Main.logger.log("INFO", username + " tried to send the message: " + incoming);
+                            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                            bufferedWriter.write("Message could not send; Illegal character sequence");
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                        }
+                        else if(incoming.equalsIgnoreCase("/list")) {
                             Main.logger.log("INFO", username + " executed /list");
                             LinkedList<String> names = new LinkedList<>();
                             for(Client client : Main.connected) {
@@ -89,6 +97,13 @@ public class Client implements Runnable {
                             }
                             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                             bufferedWriter.write("List of people online: " + Arrays.toString(names.toArray()));
+                            bufferedWriter.newLine();
+                            bufferedWriter.flush();
+                        }
+                        else if(incoming.equalsIgnoreCase("/help")) {
+                            Main.logger.log("INFO", username + " executed /help");
+                            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                            bufferedWriter.write("HELP MENU<nl>==================<nl>/list - List the people online<nl>/quit - Quit the application<nl>/exit - Quit the application");
                             bufferedWriter.newLine();
                             bufferedWriter.flush();
                         }
