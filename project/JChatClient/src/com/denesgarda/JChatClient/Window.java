@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -43,7 +42,7 @@ public class Window extends JFrame {
                             else if(input.equalsIgnoreCase("/leave")) {
                                 socket.close();
                                 frame.setVisible(false);
-                                new Login();
+                                new Request();
                             }
                             else{
                                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
