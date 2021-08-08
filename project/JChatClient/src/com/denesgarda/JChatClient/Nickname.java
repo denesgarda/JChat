@@ -58,6 +58,11 @@ public class Nickname extends JFrame {
     }
 
     private void cont(String nickname) throws IOException {
+        if(nickname.startsWith("Version: ")) {
+            JOptionPane.showMessageDialog(null, "Illegal character sequence");
+            this.setVisible(false);
+            return;
+        }
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         bufferedWriter.write(nickname);
         bufferedWriter.newLine();

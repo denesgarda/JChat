@@ -15,6 +15,8 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class Main {
+    public static double version = 2.0;
+
     public static Logger logger;
     public static PropertiesFile config;
     public static ServerType serverType;

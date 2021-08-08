@@ -27,12 +27,20 @@ public class Client implements Runnable {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String incoming = bufferedReader.readLine();
                 if(Main.requested.contains(this)) {
-                    if (incoming.equals("01100011 01101111 01101110 01101110 01100101 01100011 01110100")) {
-                        if(Main.serverType == ServerType.WITH_NICKNAMES) {
-                            this.send("0");
+                    if (incoming.startsWith("Version: ")) {
+                        double clientVersion = Double.parseDouble(incoming.substring(9));
+                        if(Main.version != clientVersion) {
+                            this.send("2");
+                            Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect using an incompatible version");
+                            Main.requested.remove(this);
                         }
-                        else if(Main.serverType == ServerType.WITH_ACCOUNTS) {
-                            this.send("1");
+                        else {
+                            if (Main.serverType == ServerType.WITH_NICKNAMES) {
+                                this.send("0");
+                            }
+                            else if (Main.serverType == ServerType.WITH_ACCOUNTS) {
+                                this.send("1");
+                            }
                         }
                     }
                     else {

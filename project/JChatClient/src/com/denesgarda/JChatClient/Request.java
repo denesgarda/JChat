@@ -53,7 +53,7 @@ public class Request extends JFrame {
             String[] address = s.split(":");
             Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            bufferedWriter.write("01100011 01101111 01101110 01101110 01100101 01100011 01110100");
+            bufferedWriter.write("Version: " + Main.version);
             bufferedWriter.newLine();
             bufferedWriter.flush();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -61,32 +61,9 @@ public class Request extends JFrame {
             switch(response1) {
                 case "0" -> new Nickname(socket, this);
                 case "1" -> new Login(socket, this);
+                case "2" -> JOptionPane.showMessageDialog(null, "Incompatible version");
                 default -> JOptionPane.showMessageDialog(null, "Unknown response code from server: " + response1);
             }
-            /*if(response1.equals("0")) {
-                bufferedWriter.write("?");
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-                String response2 = bufferedReader.readLine();
-                switch (response2) {
-                    case "0" -> JOptionPane.showMessageDialog(null, "Username is taken");
-                    case "1" -> {
-                        this.setVisible(false);
-                        Window window = new Window(socket);
-                        Server server = new Server(socket, window);
-                        Thread thread = new Thread(server);
-                        thread.start();
-                    }
-                    case "2" -> JOptionPane.showMessageDialog(null, "User name is not allowed");
-                    default -> JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
-                }
-            }
-            else if(response1.equals("1")) {
-                JOptionPane.showMessageDialog(null, "Connection refused: Connection throttle");
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
-            }*/
         }
         catch(SocketException e) {
             JOptionPane.showMessageDialog(null, "Socket error: Either you are not connected to the internet, or the server is not running.");
