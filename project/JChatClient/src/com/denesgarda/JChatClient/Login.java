@@ -5,106 +5,118 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 
 public class Login extends JFrame {
     private JPanel panel1;
-    private JTextField textField1;
-    private JButton connectButton;
-    private JTextField nicknameTextField;
+    private JTextField usernameTextField;
+    private JTextField passwordTextField;
+    private JCheckBox createAccountCheckBox;
     private JButton cancelButton;
+    private JButton connectButton;
 
-    public Login() {
+    private Socket socket;
+    private Request request;
+
+    public Login(Socket socket, Request request) {
         super("JChatClient Login");
-        this.setSize(270, 128);
+        this.socket = socket;
+        this.request = request;
+        this.setSize(230, 160);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setContentPane(panel1);
         this.setVisible(true);
+        JFrame frame = this;
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                frame.setVisible(false);
             }
         });
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cont(textField1.getText(), nicknameTextField.getText());
-            }
-        });
-        textField1.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    cont(textField1.getText(), nicknameTextField.getText());
+                try {
+                    cont(usernameTextField.getText(), passwordTextField.getText(), createAccountCheckBox.isSelected());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
             }
         });
-        nicknameTextField.addKeyListener(new KeyAdapter() {
+        usernameTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    cont(textField1.getText(), nicknameTextField.getText());
+                    try {
+                        cont(usernameTextField.getText(), passwordTextField.getText(), createAccountCheckBox.isSelected());
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            }
+        });
+        passwordTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    try {
+                        cont(usernameTextField.getText(), passwordTextField.getText(), createAccountCheckBox.isSelected());
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
             }
         });
     }
 
-    private void cont(String s, String username) {
-        try {
-            String[] address = s.split(":");
-            Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
+    private void cont(String username, String password, boolean createAccount) throws IOException {
+        if(username.contains(" ") || password.contains(" ")) {
+            JOptionPane.showMessageDialog(null, "Credentials cannot contain spaces");
+            this.setVisible(false);
+        }
+        else {
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            bufferedWriter.write("01100011 01101111 01101110 01101110 01100101 01100011 01110100");
+            bufferedWriter.write(createAccount + " " + username + " " + password);
             bufferedWriter.newLine();
             bufferedWriter.flush();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String response1 = bufferedReader.readLine();
-            if(response1.equals("0")) {
-                bufferedWriter.write(username);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
-                String response2 = bufferedReader.readLine();
-                if(response2.equals("0")) {
-                    JOptionPane.showMessageDialog(null, "Username is taken");
-                }
-                else if(response2.equals("1")) {
+            switch(response1) {
+                case "0" -> {
                     this.setVisible(false);
+                    request.setVisible(false);
                     Window window = new Window(socket);
                     Server server = new Server(socket, window);
                     Thread thread = new Thread(server);
                     thread.start();
                 }
-                else if(response2.equals("2")) {
-                    JOptionPane.showMessageDialog(null, "User name is not allowed");
+                case "1" -> {
+                    JOptionPane.showMessageDialog(null, "Account creation is not allowed on this server");
+                    this.setVisible(false);
                 }
-                else {
-                    JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
+                case "2" -> {
+                    JOptionPane.showMessageDialog(null, "Invalid credentials");
+                    this.setVisible(false);
+                }
+                case "3" -> {
+                    JOptionPane.showMessageDialog(null, "Username is taken");
+                    this.setVisible(false);
+                }
+                case "4" -> {
+                    JOptionPane.showMessageDialog(null, "Account creation failed for unknown reason");
+                    this.setVisible(false);
+                }
+                case "5" -> {
+                    JOptionPane.showMessageDialog(null, "You are banned from this server");
+                    this.setVisible(false);
+                }
+                default -> {
+                    JOptionPane.showMessageDialog(null, "Unknown response code from server: " + response1);
+                    this.setVisible(false);
                 }
             }
-            else if(response1.equals("1")) {
-                JOptionPane.showMessageDialog(null, "Connection refused: Connection throttle");
-            }
-            else {
-                JOptionPane.showMessageDialog(null, "Received an unknown response from the server");
-            }
-        }
-        catch(SocketException e) {
-            JOptionPane.showMessageDialog(null, "Socket error: Either you are not connected to the internet, or the server is not running.");
-        }
-        catch(ArrayIndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(null, "Unknown format; please use the format <ip>:<port>\nex. 11.222.333.444:9000");
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "An error occurred");
         }
     }
 }

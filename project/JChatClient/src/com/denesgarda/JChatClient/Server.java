@@ -21,15 +21,35 @@ public class Server implements Runnable {
                 if(in.ready()) {
                     String incoming = in.readLine();
                     incoming = incoming.replace("<nl>", "\n");
-                    System.out.println(incoming);
                     if(incoming.equals("You have been kicked from the server")) {
+                        System.out.println(incoming);
                         JOptionPane.showMessageDialog(null, "You have been kicked from the server");
-                        System.exit(0);
+                        frame.setVisible(false);
+                        new Request();
                     }
-                    if(incoming.equals("Server closed")) {
+                    else if(incoming.equals("You have been banned from the server")) {
+                        System.out.println(incoming);
+                        JOptionPane.showMessageDialog(null, "You have been banned from the server");
+                        frame.setVisible(false);
+                        new Request();
+                    }
+                    else if(incoming.equals("Connection reset")) {
+                        System.out.println(incoming);
+                        JOptionPane.showMessageDialog(null, "Connection reset");
+                        frame.setVisible(false);
+                        new Request();
+                    }
+                    else if(incoming.equals("Server closed")) {
+                        System.out.println(incoming);
                         JOptionPane.showMessageDialog(null, "Server closed");
                         frame.setVisible(false);
-                        new Login();
+                        new Request();
+                    }
+                    else if(incoming.startsWith("Name: ")) {
+                        frame.setName("JChatClient - " + incoming.substring(7));
+                    }
+                    else {
+                        System.out.println(incoming);
                     }
                 }
             }
