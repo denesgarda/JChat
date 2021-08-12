@@ -366,9 +366,9 @@ public class Client implements Runnable {
                                 }
                             }
                         }
-                        System.out.println("Could not find a user with the username " + username);
+                        this.send("Could not find a user with the username " + username);
                     } else {
-                        System.out.println("Invalid arguments");
+                        this.send("Invalid arguments");
                     }
                 }
                 else if(command.equalsIgnoreCase("ban")) {
@@ -405,11 +405,11 @@ public class Client implements Runnable {
                                     return;
                                 }
                             }
-                            System.out.println("Could not find a user with the username " + args[0]);
+                            this.send("Could not find a user with the username " + args[0]);
                         }
                     }
                     else {
-                        System.out.println("Invalid arguments");
+                        this.send("Invalid arguments");
                     }
                 }
                 else if(command.equalsIgnoreCase("pardon")) {
@@ -427,11 +427,11 @@ public class Client implements Runnable {
                                     return;
                                 }
                             }
-                            System.out.println("Could not find a user with the username " + args[0]);
+                            this.send("Could not find a user with the username " + args[0]);
                         }
                     }
                     else {
-                        System.out.println("Invalid arguments");
+                        this.send("Invalid arguments");
                     }
                 }
                 else if(command.equalsIgnoreCase("banlist")) {
@@ -449,7 +449,7 @@ public class Client implements Runnable {
                         this.send("Banned accounts are: " + Arrays.toString(names.toArray()));
                     }
                     else {
-                        System.out.println("Invalid arguments");
+                        this.send("Invalid arguments");
                     }
                 }
                 else {

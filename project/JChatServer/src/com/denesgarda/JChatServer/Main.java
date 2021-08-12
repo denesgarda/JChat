@@ -15,7 +15,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class Main {
-    public static double version = 2.0;
+    public static double version = 2.1;
 
     public static Logger logger;
     public static PropertiesFile config;
