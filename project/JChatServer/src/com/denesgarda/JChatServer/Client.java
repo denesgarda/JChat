@@ -154,7 +154,7 @@ public class Client implements Runnable {
                                             if(args[2].equals(propertiesFile.getProperty("password"))) {
                                                 found = true;
                                                 if(Boolean.parseBoolean(propertiesFile.getProperty("banned"))) {
-                                                    Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect as " + args[1] + " but rejected because they are banned");
+                                                    Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect as " + args[1] + " but got rejected because they are banned");
                                                     this.send("5");
                                                     Main.requested.remove(this);
                                                 }
