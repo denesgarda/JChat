@@ -6,6 +6,8 @@ import com.denesgarda.Prop4j.data.PropertiesFile;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
@@ -68,6 +70,30 @@ public class Window extends JFrame {
                 }
             }
         });
+        textArea1.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    textField1.requestFocus();
+                }
+                if(e.getKeyCode() == KeyEvent.VK_SLASH) {
+                    textField1.requestFocus();
+                    if(textField1.getText().isBlank()) {
+                        textField1.setText("/");
+
+                    }
+                }
+            }
+        });
+        textField1.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent fe) {
+                textField1.setCaretPosition(textField1.getDocument().getLength());
+            }
+
+            public void focusLost(FocusEvent fe) {
+            }
+        });
+        textField1.requestFocus();
     }
 
     private void command(String command, String[] args) throws IOException {
