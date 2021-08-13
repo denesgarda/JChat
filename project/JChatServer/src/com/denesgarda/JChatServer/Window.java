@@ -52,16 +52,20 @@ public class Window extends JFrame {
                             }
                         }
                         else {
-                            String message = Main.logger.log("SERVER", input);
-                            for (Client client : Main.connected) {
-                                try {
-                                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
-                                    bufferedWriter.write(message);
-                                    bufferedWriter.newLine();
-                                    bufferedWriter.flush();
-                                }
-                                catch (Exception ex) {
-                                    ex.printStackTrace();
+                            if(input.contains("<nl>")) {
+                                System.out.println("Message could not send; Illegal character sequence");
+                            }
+                            else {
+                                String message = Main.logger.log("SERVER", input);
+                                for (Client client : Main.connected) {
+                                    try {
+                                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(client.socket.getOutputStream()));
+                                        bufferedWriter.write(message);
+                                        bufferedWriter.newLine();
+                                        bufferedWriter.flush();
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
                                 }
                             }
                         }
