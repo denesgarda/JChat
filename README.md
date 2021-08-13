@@ -1,5 +1,5 @@
 # JChat
-JChat is self-hosted Java chat application.
+JChat is a self-hosted Java chat application.
 ## Using the client
 Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.2/JChatClient.jar).
 
