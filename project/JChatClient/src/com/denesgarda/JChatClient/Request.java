@@ -50,7 +50,14 @@ public class Request extends JFrame {
 
     private void cont(String s) {
         try {
-            String[] address = s.split(":");
+            String[] address = new String[2];
+            if(s.contains(":")) {
+                address = s.split(":");
+            }
+            else {
+                address[0] = s;
+                address[1] = "6577";
+            }
             Socket socket = new Socket(address[0], Integer.parseInt(address[1]));
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             bufferedWriter.write("Version: " + Main.version);
@@ -67,9 +74,6 @@ public class Request extends JFrame {
         }
         catch(SocketException e) {
             JOptionPane.showMessageDialog(null, "Socket error: Either you are not connected to the internet, or the server is not running.");
-        }
-        catch(ArrayIndexOutOfBoundsException e) {
-            JOptionPane.showMessageDialog(null, "Unknown format; please use the format <ip>:<port>\nex. 11.222.333.444:9000");
         }
         catch(Exception e) {
             e.printStackTrace();
