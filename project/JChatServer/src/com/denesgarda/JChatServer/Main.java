@@ -87,6 +87,14 @@ public class Main {
         }
         else {
             serverType = ServerType.WITH_NICKNAMES;
+            File bannedNicknames = new File("banned-nicknames.txt");
+            if(!bannedNicknames.exists()) {
+                boolean successful = bannedNicknames.createNewFile();
+                if(!successful) {
+                    System.out.println("Initialization failed");
+                    System.exit(-1);
+                }
+            }
         }
         logger.log("INFO", "Opening socket");
         ServerSocket serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
