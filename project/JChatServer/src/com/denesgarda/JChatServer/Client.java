@@ -3,7 +3,9 @@ package com.denesgarda.JChatServer;
 import com.denesgarda.JChatServer.enums.ServerType;
 import com.denesgarda.JChatServer.log.Logger;
 import com.denesgarda.JChatServer.prop4j.APF;
+import com.denesgarda.JChatServer.util.Files;
 import com.denesgarda.Prop4j.data.PropertiesFile;
+import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import java.io.*;
@@ -61,7 +63,17 @@ public class Client implements Runnable {
                                 bufferedWriter.flush();
                                 Main.requested.remove(this);
                                 return;
-                            } else {
+                            }
+                            else if(Arrays.asList(Files.getAllLines("banned-nicknames.txt")).contains(incoming)) {
+                                Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect using a banned nickname");
+                                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                                bufferedWriter.write("4");
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                Main.requested.remove(this);
+                                return;
+                            }
+                            else {
                                 for (Client client : Main.connected) {
                                     if (client.username.equals(incoming)) {
                                         Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect using a taken nickname");
