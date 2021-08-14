@@ -1,11 +1,11 @@
 # JChat
 JChat is a self-hosted Java chat application.
 ## Using the client
-Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.2/JChatClient.jar).
+Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.3/JChatClient.jar).
 
 To use it, simply launch the application.
 ## Setting up a server
-Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.2/JChatServer.jar).
+Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.3/JChatServer.jar).
 
 Put the server in its own dedicated directory. For example, I put it in the a folder called ``server``.
 
@@ -18,6 +18,8 @@ Then, to set it up, double click the jar file. This will launch the server, as w
 By default, servers use a nickname system. This means that to join, the client will have to enter a nickname. This can be changed to accounts. You can do this by changing ``use-accounts`` in ``config.properties`` from ``false`` to ``true``. If you stop the server, change the value, then restart it, you should see a new folder called ``accounts``. This is where information about accounts are stored. Each account is a ``.properties`` file. The username is the name of the properties file. By default, an account named ``default`` will be automatically creatied to showcase how accounts work. You can delete this account. There, however, should always be at least one existent account. 
 
 ![server_jar_accounts](https://github.com/DenDen747/JChat/blob/main/assets/image/server_jar_accounts.png?raw=true)
+
+There should also be a ``banned-nicknames.txt`` file. In this file, separate every banned nickname with a new line.
 
 Users cannot create accounts by default. This can be allowed by changing ``allow-account-creation`` in ``config.properties`` from ``false`` to ``true``.
 
