@@ -19,6 +19,7 @@ public class APF extends PropertiesFile {
         fileInputStream.close();
         if(result == null) {
             this.setProperty(key, defaultValue);
+            return defaultValue;
         }
         return result;
     }
