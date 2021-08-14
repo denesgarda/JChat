@@ -3,8 +3,7 @@ JChat is a self-hosted Java chat application.
 ## Using the client
 Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.2/JChatClient.jar).
 
-To use it, simply launch the application, enter the server address and your desired nickname, and press enter or click connect.
-For commands, type "/help" once connected to a server.
+To use it, simply launch the application.
 ## Setting up a server
 Download the latest release [here](https://github.com/DenDen747/JChat/raw/main/builds/2.2/JChatServer.jar).
 
