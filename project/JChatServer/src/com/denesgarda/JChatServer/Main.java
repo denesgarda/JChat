@@ -2,6 +2,7 @@ package com.denesgarda.JChatServer;
 
 import com.denesgarda.JChatServer.enums.ServerType;
 import com.denesgarda.JChatServer.log.Logger;
+import com.denesgarda.JChatServer.prop4j.APF;
 import com.denesgarda.Prop4j.data.PropertiesFile;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class Main {
     public static double version = 2.3;
 
     public static Logger logger;
-    public static PropertiesFile config;
+    public static APF config;
     public static ServerType serverType;
     
     public static LinkedList<Client> requested = new LinkedList<>();
@@ -35,11 +36,11 @@ public class Main {
                 System.exit(-1);
             }
         }
-        PrintStream printStream = new PrintStream(new FileOutputStream("logs/" + Calendar.getInstance().getTime() + ".log"));
+        PrintStream printStream = new PrintStream(new FileOutputStream("logs/" + Calendar.getInstance().getTime().toString().replace("/", "-") + ".log"));
         logger = new Logger(new PrintStream[]{System.out, printStream});
         logger.log("INFO", "Starting server");
         logger.log("INFO", "Searching for config files");
-        config = new PropertiesFile("config.properties");
+        config = new APF("config.properties");
         if(config.exists()) {
             logger.log("INFO", "Config files found");
         }
@@ -62,8 +63,8 @@ public class Main {
             logger.log("INFO", "Configuration complete");
         }
         logger.log("INFO", "Configuring server");
-        window.setTitle("JChatServer - " + config.getProperty("server-name"));
-        boolean useAccounts = Boolean.parseBoolean(config.getProperty("use-accounts"));
+        window.setTitle("JChatServer - " + config.getPropertyNotNull("server-name", String.valueOf(new Random().nextInt(100000))));
+        boolean useAccounts = Boolean.parseBoolean(config.getPropertyNotNull("use-accounts", "false"));
         if(useAccounts) {
             serverType = ServerType.WITH_ACCOUNTS;
             File accDir = new File("accounts");
@@ -79,7 +80,7 @@ public class Main {
                     System.out.println("Initialization failed");
                     System.exit(-1);
                 }
-                PropertiesFile def = new PropertiesFile("accounts/default.properties");
+                APF def = new APF("accounts/default.properties");
                 def.setProperty("password", "password");
                 def.setProperty("administrator", "false");
                 def.setProperty("banned", "false");
@@ -97,8 +98,8 @@ public class Main {
             }
         }
         logger.log("INFO", "Opening socket");
-        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(config.getProperty("port")));
-        logger.log("INFO", "Server started on port " + config.getProperty("port"));
+        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(config.getPropertyNotNull("port", "6577")));
+        logger.log("INFO", "Server started on port " + config.getPropertyNotNull("port", "6577"));
         while(true) {
             Socket socket = serverSocket.accept();
             Client client = new Client(socket);
