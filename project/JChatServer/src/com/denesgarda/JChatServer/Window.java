@@ -1,6 +1,7 @@
 package com.denesgarda.JChatServer;
 
 import com.denesgarda.JChatServer.enums.ServerType;
+import com.denesgarda.JChatServer.prop4j.APF;
 import com.denesgarda.Prop4j.data.PropertiesFile;
 
 import javax.swing.*;
@@ -255,7 +256,7 @@ public class Window extends JFrame {
                     if(accDir.listFiles() != null) {
                         for(File file : accDir.listFiles()) {
                             if(file.getName().replace(".properties", "").equals(args[0])) {
-                                PropertiesFile acc = new PropertiesFile(file.getPath());
+                                APF acc = new APF(file.getPath());
                                 acc.setProperty("banned", "true");
                                 String username = args[0];
                                 for (Client client : Main.connected) {
@@ -296,7 +297,7 @@ public class Window extends JFrame {
                     if(accDir.listFiles() != null) {
                         for(File file : accDir.listFiles()) {
                             if(file.getName().replace(".properties", "").equals(args[0])) {
-                                PropertiesFile acc = new PropertiesFile(file.getPath());
+                                APF acc = new APF(file.getPath());
                                 acc.setProperty("banned", "false");
                                 String message = Main.logger.log("INFO", args[0] + " has been unbanned from the server");
                                 for(Client client : Main.connected) {
@@ -318,8 +319,8 @@ public class Window extends JFrame {
                     File accDir = new File("accounts");
                     if(accDir.listFiles() != null) {
                         for (File file : accDir.listFiles()) {
-                            PropertiesFile acc = new PropertiesFile(file.getPath());
-                            if(Boolean.parseBoolean(acc.getProperty("banned"))) {
+                            APF acc = new APF(file.getPath());
+                            if(Boolean.parseBoolean(acc.getPropertyNotNull("banned", "false"))) {
                                 names.add(file.getName().replace(".properties", ""));
                             }
                         }
@@ -336,7 +337,7 @@ public class Window extends JFrame {
                     if(accDir.listFiles() != null) {
                         for(File file : accDir.listFiles()) {
                             if(file.getName().replace(".properties", "").equals(args[0])) {
-                                PropertiesFile acc = new PropertiesFile(file.getPath());
+                                APF acc = new APF(file.getPath());
                                 acc.setProperty("administrator", "true");
                                 String username = args[0];
                                 for (Client client : Main.connected) {
@@ -369,7 +370,7 @@ public class Window extends JFrame {
                     if(accDir.listFiles() != null) {
                         for(File file : accDir.listFiles()) {
                             if(file.getName().replace(".properties", "").equals(args[0])) {
-                                PropertiesFile acc = new PropertiesFile(file.getPath());
+                                APF acc = new APF(file.getPath());
                                 acc.setProperty("administrator", "false");
                                 Main.logger.log("INFO", args[0] + " has been made no longer a server administrator");
                                 return;
@@ -388,8 +389,8 @@ public class Window extends JFrame {
                     File accDir = new File("accounts");
                     if(accDir.listFiles() != null) {
                         for (File file : accDir.listFiles()) {
-                            PropertiesFile acc = new PropertiesFile(file.getPath());
-                            if(Boolean.parseBoolean(acc.getProperty("administrator"))) {
+                            APF acc = new APF(file.getPath());
+                            if(Boolean.parseBoolean(acc.getPropertyNotNull("administrator", "false"))) {
                                 names.add(file.getName().replace(".properties", ""));
                             }
                         }

@@ -2,7 +2,10 @@ package com.denesgarda.JChatServer;
 
 import com.denesgarda.JChatServer.enums.ServerType;
 import com.denesgarda.JChatServer.log.Logger;
+import com.denesgarda.JChatServer.prop4j.APF;
+import com.denesgarda.JChatServer.util.Files;
 import com.denesgarda.Prop4j.data.PropertiesFile;
+import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import java.io.*;
@@ -45,7 +48,7 @@ public class Client implements Runnable {
                     }
                     else {
                         if(Main.serverType == ServerType.WITH_NICKNAMES) {
-                            if (Main.connected.size() >= Integer.parseInt(Main.config.getProperty("max-connections"))) {
+                            if (Main.connected.size() >= Integer.parseInt(Main.config.getPropertyNotNull("max-connections", "5"))) {
                                 Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect but got rejected due to connection throttle");
                                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                                 bufferedWriter.write("1");
@@ -60,7 +63,17 @@ public class Client implements Runnable {
                                 bufferedWriter.flush();
                                 Main.requested.remove(this);
                                 return;
-                            } else {
+                            }
+                            else if(Arrays.asList(Files.getAllLines("banned-nicknames.txt")).contains(incoming)) {
+                                Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect using a banned nickname");
+                                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                                bufferedWriter.write("4");
+                                bufferedWriter.newLine();
+                                bufferedWriter.flush();
+                                Main.requested.remove(this);
+                                return;
+                            }
+                            else {
                                 for (Client client : Main.connected) {
                                     if (client.username.equals(incoming)) {
                                         Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect using a taken nickname");
@@ -93,7 +106,7 @@ public class Client implements Runnable {
                             String[] args = incoming.split(" ");
                             boolean createAccount = Boolean.parseBoolean(args[0]);
                             if(createAccount) {
-                                if(Boolean.parseBoolean(Main.config.getProperty("allow-account-creation"))) {
+                                if(Boolean.parseBoolean(Main.config.getPropertyNotNull("allow-account-creation", "false"))) {
                                     File acc = new File("accounts/" + args[1] + ".properties");
                                     if(acc.exists()) {
                                         Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to create an account with a taken username");
@@ -114,7 +127,7 @@ public class Client implements Runnable {
                                             Main.requested.remove(this);
                                             break;
                                         }
-                                        PropertiesFile na = new PropertiesFile(acc.getPath());
+                                        APF na = new APF(acc.getPath());
                                         na.setProperty("password", args[2]);
                                         na.setProperty("administrator", "false");
                                         na.setProperty("banned", "false");
@@ -150,10 +163,10 @@ public class Client implements Runnable {
                                     boolean found = false;
                                     for(File file : accDir.listFiles()) {
                                         if(args[1].equals(file.getName().replace(".properties", ""))) {
-                                            PropertiesFile propertiesFile = new PropertiesFile(file.getPath());
-                                            if(args[2].equals(propertiesFile.getProperty("password"))) {
+                                            APF propertiesFile = new APF(file.getPath());
+                                            if(args[2].equals(propertiesFile.getPropertyNotNull("password", "password"))) {
                                                 found = true;
-                                                if(Boolean.parseBoolean(propertiesFile.getProperty("banned"))) {
+                                                if(Boolean.parseBoolean(propertiesFile.getPropertyNotNull("banned", "false"))) {
                                                     Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to connect as " + args[1] + " but got rejected because they are banned");
                                                     this.send("5");
                                                     Main.requested.remove(this);
@@ -317,8 +330,8 @@ public class Client implements Runnable {
             File accDir = new File("accounts");
             for(File file : accDir.listFiles()) {
                 if(file.getName().replace(".properties", "").equals(this.username)) {
-                    PropertiesFile acc = new PropertiesFile(file.getPath());
-                    if(Boolean.parseBoolean(acc.getProperty("administrator"))) {
+                    APF acc = new APF(file.getPath());
+                    if(Boolean.parseBoolean(acc.getPropertyNotNull("administrator", "false"))) {
                         administrator = true;
                     }
                 }
@@ -377,7 +390,7 @@ public class Client implements Runnable {
                         if(accDir.listFiles() != null) {
                             for(File file : accDir.listFiles()) {
                                 if(file.getName().replace(".properties", "").equals(args[0])) {
-                                    PropertiesFile acc = new PropertiesFile(file.getPath());
+                                    APF acc = new APF(file.getPath());
                                     acc.setProperty("banned", "true");
                                     String username = args[0];
                                     for (Client client : Main.connected) {
@@ -418,7 +431,7 @@ public class Client implements Runnable {
                         if(accDir.listFiles() != null) {
                             for(File file : accDir.listFiles()) {
                                 if(file.getName().replace(".properties", "").equals(args[0])) {
-                                    PropertiesFile acc = new PropertiesFile(file.getPath());
+                                    APF acc = new APF(file.getPath());
                                     acc.setProperty("banned", "false");
                                     String message = Main.logger.log("INFO", args[0] + " has been unbanned from the server");
                                     for(Client client : Main.connected) {
@@ -440,8 +453,8 @@ public class Client implements Runnable {
                         accDir = new File("accounts");
                         if(accDir.listFiles() != null) {
                             for (File file : accDir.listFiles()) {
-                                PropertiesFile acc = new PropertiesFile(file.getPath());
-                                if(Boolean.parseBoolean(acc.getProperty("banned"))) {
+                                APF acc = new APF(file.getPath());
+                                if(Boolean.parseBoolean(acc.getPropertyNotNull("banned", "false"))) {
                                     names.add(file.getName().replace(".properties", ""));
                                 }
                             }

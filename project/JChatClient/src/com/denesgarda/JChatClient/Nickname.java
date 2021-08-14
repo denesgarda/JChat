@@ -90,6 +90,10 @@ public class Nickname extends JFrame {
                 JOptionPane.showMessageDialog(null, "Connection refused: Nickname taken");
                 this.setVisible(false);
             }
+            case "4" -> {
+                JOptionPane.showMessageDialog(null, "Connection refused: Banned nickname");
+                this.setVisible(false);
+            }
             default -> {
                 JOptionPane.showMessageDialog(null, "Unknown response code from server: " + response1);
                 this.setVisible(false);
