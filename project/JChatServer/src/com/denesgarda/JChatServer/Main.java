@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 public class Main {
-    public static double version = 2.3;
+    public static double version = 2.4;
 
     public static Logger logger;
     public static APF config;
