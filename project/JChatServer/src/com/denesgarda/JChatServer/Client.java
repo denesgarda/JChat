@@ -107,7 +107,7 @@ public class Client implements Runnable {
                             boolean createAccount = Boolean.parseBoolean(args[0]);
                             if(createAccount) {
                                 if(Boolean.parseBoolean(Main.config.getPropertyNotNull("allow-account-creation", "false"))) {
-                                    File acc = new File("accounts/" + args[1] + ".properties");
+                                    File acc = new File("accounts" + File.separator + args[1] + ".properties");
                                     if(acc.exists()) {
                                         Main.logger.log("INFO", socket.getInetAddress().toString().replace("/", "") + " tried to create an account with a taken username");
                                         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));

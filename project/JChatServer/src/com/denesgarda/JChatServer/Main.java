@@ -36,7 +36,7 @@ public class Main {
                 System.exit(-1);
             }
         }
-        PrintStream printStream = new PrintStream(new FileOutputStream("logs/" + Calendar.getInstance().getTime().toString().replace("/", "-") + ".log"));
+        PrintStream printStream = new PrintStream(new FileOutputStream("logs" + File.separator + Calendar.getInstance().getTime().toString().replace("/", "-") + ".log"));
         logger = new Logger(new PrintStream[]{System.out, printStream});
         logger.log("INFO", "Starting server");
         logger.log("INFO", "Searching for config files");
@@ -74,13 +74,13 @@ public class Main {
                     System.out.println("Initialization failed");
                     System.exit(-1);
                 }
-                File df = new File("accounts/default.properties");
+                File df = new File("accounts" + File.separator + "default.properties");
                 successful = df.createNewFile();
                 if(!successful) {
                     System.out.println("Initialization failed");
                     System.exit(-1);
                 }
-                APF def = new APF("accounts/default.properties");
+                APF def = new APF("accounts" + File.separator + "default.properties");
                 def.setProperty("password", "password");
                 def.setProperty("administrator", "false");
                 def.setProperty("banned", "false");
